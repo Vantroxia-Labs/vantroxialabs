@@ -1,0 +1,162 @@
+@import "tailwindcss";
+
+@custom-variant dark {
+  &:where(:root:has(> head > meta[name="color-scheme"][content="dark"]) *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:has(> head > meta[name="color-scheme"][content="light dark"]) *) {
+      @slot;
+    }
+  }
+}
+
+@layer base {
+  :root {
+    --font-sans: "Plus Jakarta Sans Variable", -apple-system, BlinkMacSystemFont,
+      "Segoe UI", Roboto, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco,
+      Consolas, monospace;
+    --grid-line: rgba(15, 23, 42, 0.045);
+
+    /* Adapt native browser UI (scrollbars, form controls) and reflect <meta> override */
+    color-scheme: light dark;
+
+    &:has(> head > meta[name="color-scheme"][content="dark"]) {
+      color-scheme: dark;
+      --grid-line: rgba(148, 163, 184, 0.06);
+    }
+
+    &:has(> head > meta[name="color-scheme"][content="light"]) {
+      color-scheme: light;
+      --grid-line: rgba(15, 23, 42, 0.045);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      &:has(> head > meta[name="color-scheme"][content="light dark"]) {
+        --grid-line: rgba(148, 163, 184, 0.06);
+      }
+    }
+  }
+
+  html {
+    font-family: var(--font-sans);
+
+    @media (prefers-reduced-motion: no-preference) {
+      scroll-behavior: smooth;
+    }
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+    overflow-wrap: break-word;
+  }
+
+  code,
+  kbd,
+  pre,
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+
+  :where(a:any-link, button):focus-visible {
+    outline: 2px solid #4f46e5;
+    outline-offset: 3px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:has(> head > meta[name="color-scheme"][content="light dark"])
+      :where(a:any-link, button):focus-visible {
+      outline-color: #22d3ee;
+    }
+  }
+
+  :root:has(> head > meta[name="color-scheme"][content="dark"])
+    :where(a:any-link, button):focus-visible {
+    outline-color: #22d3ee;
+  }
+
+  @media (pointer: coarse) {
+    :where(a:any-link, button) {
+      min-block-size: 44px;
+    }
+  }
+}
+
+/* Visually hidden utility keeping focusable elements (skip links) reachable */
+.visually-hidden:where(:not(:focus-within, :active)) {
+  position: absolute !important;
+  clip-path: inset(50%) !important;
+  overflow: hidden !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  white-space: nowrap !important;
+}
+
+.skip-link:focus-visible {
+  position: fixed;
+  inset-block-start: 0.75rem;
+  inset-inline-start: 0.75rem;
+  z-index: 100;
+  padding: 0.625rem 1rem;
+  border-radius: 0.625rem;
+  background: #4f46e5;
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.25);
+}
+
+/* Subtle architectural grid background */
+.bg-arch-grid {
+  background-size: 48px 48px;
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+}
+
+@keyframes pulse-slow {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.animate-pulse-slow {
+  opacity: 0.55;
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: pulse-slow 6s ease-in-out infinite;
+  }
+}
+
+/* Preserve text legibility & boundaries in Forced Colors Mode (Windows High Contrast) */
+@media (forced-colors: active) {
+  h1 span {
+    background: none !important;
+    -webkit-text-fill-color: CanvasText !important;
+    color: CanvasText !important;
+  }
+
+  .bg-arch-grid {
+    background-image: none;
+  }
+
+  :where(a:any-link, button):focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 3px;
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Vantroxia Labs LTD",
+  "short_name": "Vantroxia Labs",
+  "description": "Software engineering studio building GymMateHub and AegisRemit.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07090f",
+  "theme_color": "#4f46e5",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
+

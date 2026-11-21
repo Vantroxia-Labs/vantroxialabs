@@ -19,6 +19,16 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies and lint
+        run: |
+          npm ci
+          npm run lint
+
       - name: Set image name
         run: echo "IMAGE=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_ENV"
 
@@ -47,7 +57,7 @@ jobs:
           DOKPLOY_API_KEY: ${{ secrets.DOKPLOY_API_KEY }}
           APP_ID: ${{ vars.DOKPLOY_APP_ID }}
         run: |
-          curl -fsS -X POST "$DOKPLOY_URL/api/application.deploy" \
+          curl -sS --fail-with-body -X POST "${DOKPLOY_URL%/}/api/application.deploy" \
             -H "accept: application/json" \
             -H "x-api-key: $DOKPLOY_API_KEY" \
             -H "Content-Type: application/json" \
